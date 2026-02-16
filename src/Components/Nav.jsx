@@ -7,18 +7,19 @@ const Nav = () => {
   return (
     <div className='w-full h-[100px] flex justify-between items-center px-8'>
         <div className='w-[60px] h-[60px] bg-white flex justify-center
-         items-center rounded-md shadow-xl'>
+         items-center rounded-full shadow-xl'>
             <MdFastfood className='w-[30px] h-[30px] text-green-500' />
         </div>
         <form className='w-[60%] h-[60px] bg-white flex
-        items-center px-5 ga-5'>
-          <IoSearch />
+        items-center px-5 ga-5 rounded-full shadow-xl'>
+          <IoSearch className='text-green-500 w-[30px] h-[30px]' />
           <input type="text" placeholder='search Items...'
           className='w-[100%] outline-none text-[20px]' />
         </form>
           <div className='h-[100px]  flex items-center'>
             <div className='w-[60px] h-[60px] bg-white flex justify-center 
-            items-center rounded-md shadow-xl'>
+            items-center rounded-md shadow-xl relative'>
+              <span className='absolute top-0 right-1 text-green-500 font-bold text-[18px]'>0</span>
             <FaBagShopping className='w-[30px] h-[30px] text-green-500' />
           </div>
         </div>
