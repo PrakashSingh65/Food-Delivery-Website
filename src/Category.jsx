@@ -5,42 +5,43 @@ import { FaPastafarianism } from "react-icons/fa";
 import { MdFoodBank } from "react-icons/md";
 import { GiFullPizza } from "react-icons/gi";
 import { PiHamburgerBold } from "react-icons/pi";
- const Categories=[
+
+const Categories = [
     {
         id:1,
         name:"All",
-        image:<TiThSmall className='w-[60px] h-[60px] text-green-600'/>
+        icon:<TiThSmall className='w-[60px] h-[60px] text-green-600'/>
     },
     {
         id:2,
         name:"Breakfast",
-        image:<MdFreeBreakfast className='w-[60px] h-[60px] text-green-600' />
+        icon:<MdFreeBreakfast className='w-[60px] h-[60px] text-green-600' />
     },
     {
         id:3,
         name:"soup",
-        image:<TbSoupFilled className='w-[60px] h-[60px] text-green-600' />
+        icon:<TbSoupFilled className='w-[60px] h-[60px] text-green-600' />
     },
     {
         id:4,
         name:"pasta",
-        image:<FaPastafarianism className='w-[60px] h-[60px] text-green-600'/>
+        icon:<FaPastafarianism className='w-[60px] h-[60px] text-green-600'/>
     },
     {
         id:5,
         name:"main_course",
-        image:<MdFoodBank className='w-[60px] h-[60px] text-green-600'/>
+        icon:<MdFoodBank className='w-[60px] h-[60px] text-green-600'/>
     },
     {
         id:6,
         name:"pizza",
-        image:<GiFullPizza className='w-[60px] h-[60px] text-green-600' />
+        icon:<GiFullPizza className='w-[60px] h-[60px] text-green-600' />
     },
     {
         id:7,
         name:"burger",
-        image:<PiHamburgerBold className='w-[60px] h-[60px] text-green-600'/>
+        icon:<PiHamburgerBold className='w-[60px] h-[60px] text-green-600'/>
     },
-]
+];
 
-export default Categories
+export default Categories;
