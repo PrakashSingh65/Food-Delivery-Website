@@ -5,7 +5,7 @@ import Card from '../Components/Card'
 
 const Home = () => {
   return (
-    <div className='bg-slate-200 w-full h-screen'>
+    <div className='bg-slate-200 w-full h-screen py-5'>
       
       <div className='flex flex-warp justify-center items-center gap-5 w-[100%]'>
         {Categories.map((item)=>{
@@ -19,7 +19,7 @@ const Home = () => {
           </div>
         })}
       </div>
-      <card/>
+      <Card/>
     </div>
   )
 }
