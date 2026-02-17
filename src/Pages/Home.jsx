@@ -6,13 +6,16 @@ const Home = () => {
   return (
     <div className='bg-slate-200 w-full h-screen'>
       
-      <div className='p-4 grid grid-cols-1 md:grid-cols-3 gap-4'>
-        {Categories.map((item) => (
-          <div key={item.id} className='flex items-center gap-4 bg-white p-3 rounded-md'>
+      <div className='flex flex-warp justify-center items-center gap-5 w-[100%]'>
+        {Categories.map((item)=>{
+          return <div className='w-[140px] h-[150px] bg-white flex
+          flex-col item-start gap-5 p-5 justify-start text-[20px]
+          font-semibold text-gray-600 rounded-lg shadow-xl hover:bg-green-300'>
             {item.icon}
-            <span className='font-medium'>{item.name}</span>
+            {item.name}
+            
           </div>
-        ))}
+        })}
       </div>
     </div>
   )
