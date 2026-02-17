@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Categories from '../Category'
+import Card from '../Components/Card'
 
 const Home = () => {
   return (
@@ -10,13 +11,15 @@ const Home = () => {
         {Categories.map((item)=>{
           return <div className='w-[140px] h-[150px] bg-white flex
           flex-col item-start gap-5 p-5 justify-start text-[20px]
-          font-semibold text-gray-600 rounded-lg shadow-xl hover:bg-green-300'>
+          font-semibold text-gray-600 rounded-lg shadow-xl hover:bg-green-200 cursor-pointer
+          transition-all durataion-200'>
             {item.icon}
             {item.name}
             
           </div>
         })}
       </div>
+      <card/>
     </div>
   )
 }
