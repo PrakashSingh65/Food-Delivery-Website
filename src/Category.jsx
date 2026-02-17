@@ -1,10 +1,11 @@
 import { TiThSmall } from "react-icons/ti";
 import { MdFreeBreakfast } from "react-icons/md";
-import { TbSoupFilled } from "react-icons/tb";
+import { TbBowlFilled } from "react-icons/tb";
 import { FaPastafarianism } from "react-icons/fa";
 import { MdFoodBank } from "react-icons/md";
 import { GiFullPizza } from "react-icons/gi";
 import { PiHamburgerBold } from "react-icons/pi";
+import React from 'react'
 
 const Categories = [
     {
@@ -20,7 +21,7 @@ const Categories = [
     {
         id:3,
         name:"soup",
-        icon:<TbSoupFilled className='w-[60px] h-[60px] text-green-600' />
+        icon:<TbBowlFilled className='w-[60px] h-[60px] text-green-600' />
     },
     {
         id:4,
