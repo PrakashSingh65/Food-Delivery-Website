@@ -3,10 +3,18 @@
  export const dataContext=createContext()
  
  const UserContext = ({ children }) => {
+  let[input,setInput]=useState("") 
+  let data={
+    input,
+    setInput
+  }
 
    return (
      <div>
-         {children}
+      <dataContext.Provider value={data}>
+        {children}
+      </dataContext.Provider>
+         
      </div>
    )
  }
