@@ -2,8 +2,16 @@ import React from 'react'
 import { LuLeafyGreen } from 'react-icons/lu'
 import { GiChickenOven } from 'react-icons/gi'
 import { FiShoppingCart } from 'react-icons/fi'
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../redux/cartSlice'
 
 const Card = ({ name, image, id, price, type }) => {
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({ name, image, id, price, type }));
+  };
+
   return (
     <div className="group w-[280px] bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 flex flex-col border border-gray-100">
 
@@ -36,7 +44,10 @@ const Card = ({ name, image, id, price, type }) => {
 
         <div className="flex items-center justify-between mt-auto">
           <span className="text-xl font-black text-orange-500">₹{price}</span>
-          <button className="flex items-center gap-2 bg-linear-to-r from-orange-500 to-red-500 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-md">
+          <button 
+            onClick={handleAddToCart}
+            className="flex items-center gap-2 bg-linear-to-r from-orange-500 to-red-500 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-md cursor-pointer"
+          >
             <FiShoppingCart />
             Add
           </button>

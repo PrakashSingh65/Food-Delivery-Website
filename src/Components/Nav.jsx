@@ -4,10 +4,14 @@ import { IoSearch } from 'react-icons/io5'
 import { FaBagShopping } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { dataContext } from '../Context/UserContext'
+import { useSelector } from 'react-redux'
 
 const Nav = () => {
   const { input, setInput } = useContext(dataContext)
+  const cartItems = useSelector((state) => state.cart.items)
   const [scrolled, setScrolled] = useState(false)
+
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -67,12 +71,15 @@ const Nav = () => {
           </Link>
 
           {/* Cart */}
-          <div className="relative w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center shadow-sm cursor-pointer hover:border-orange-400 transition">
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-linear-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
-              0
+          <Link 
+            to="/cart"
+            className="relative w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center shadow-sm cursor-pointer hover:border-orange-400 hover:shadow-md transition-all group"
+          >
+            <span className="absolute -top-1 -right-1 w-6 h-6 bg-linear-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white text-[11px] font-black group-hover:scale-110 transition-transform shadow-sm">
+              {cartCount}
             </span>
-            <FaBagShopping className="text-orange-500 text-lg" />
-          </div>
+            <FaBagShopping className="text-orange-500 text-xl group-hover:scale-110 transition-transform" />
+          </Link>
         </div>
 
       </div>

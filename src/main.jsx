@@ -6,13 +6,18 @@ import { RouterProvider } from "react-router-dom";
 import router from "./Routes/Routing.jsx";
 import UserContext from "./Context/UserContext.jsx";
 import React from "react";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <UserContext>
-      <RouterProvider router={router}>
-        <App />
-      </RouterProvider>
-    </UserContext>
+    <Provider store={store}>
+      <UserContext>
+        <RouterProvider router={router}>
+          <App />
+        </RouterProvider>
+      </UserContext>
+    </Provider>
   </StrictMode>
 );
+
