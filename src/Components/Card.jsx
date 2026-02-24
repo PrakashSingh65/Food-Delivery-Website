@@ -5,6 +5,7 @@ import { FiShoppingCart } from 'react-icons/fi'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../redux/cartSlice'
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const Card = ({ name, image, id, price, type }) => {
   const dispatch = useDispatch();
@@ -17,8 +18,8 @@ const Card = ({ name, image, id, price, type }) => {
   return (
     <div className="group w-[280px] bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 flex flex-col border border-gray-100">
 
-      {/* Image */}
-      <div className="relative w-full h-[180px] overflow-hidden">
+      {/* Image Link */}
+      <Link to={`/product/${id}`} className="relative w-full h-[180px] overflow-hidden block">
         <img
           src={image}
           alt={name}
@@ -38,11 +39,13 @@ const Card = ({ name, image, id, price, type }) => {
             <><GiChickenOven /> Non-Veg</>
           )}
         </span>
-      </div>
+      </Link>
 
       {/* Details */}
       <div className="p-5 flex flex-col gap-3 flex-1">
-        <h3 className="text-lg font-bold text-gray-800 leading-tight">{name}</h3>
+        <Link to={`/product/${id}`}>
+          <h3 className="text-lg font-bold text-gray-800 leading-tight hover:text-orange-500 transition">{name}</h3>
+        </Link>
 
         <div className="flex items-center justify-between mt-auto">
           <span className="text-xl font-black text-orange-500">₹{price}</span>
