@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { MdFastfood, MdDeliveryDining } from 'react-icons/md'
+import { MdFastfood } from 'react-icons/md'
 import { IoSearch } from 'react-icons/io5'
 import { FaBagShopping } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
 import { dataContext } from '../Context/UserContext'
 
 const Nav = () => {
@@ -25,14 +26,14 @@ const Nav = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between gap-4">
 
         {/* Logo */}
-        <div className="flex items-center gap-3 shrink-0">
+        <Link to="/" className="flex items-center gap-3 shrink-0">
           <div className="w-10 h-10 bg-linear-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-md">
             <MdFastfood className="text-white text-xl" />
           </div>
           <span className="text-xl font-black text-gray-800 hidden sm:block">
             Food<span className="text-orange-500">Rush</span>
           </span>
-        </div>
+        </Link>
 
         {/* Search */}
         <form
@@ -51,10 +52,21 @@ const Nav = () => {
 
         {/* Right icons */}
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-1 text-sm text-green-600 font-semibold bg-green-50 rounded-xl px-3 py-2">
-            <MdDeliveryDining className="text-lg" />
-            <span>Free Delivery</span>
-          </div>
+          {/* Auth links */}
+          <Link
+            to="/login"
+            className="hidden md:block text-sm font-semibold text-gray-600 hover:text-orange-500 transition"
+          >
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            className="hidden md:flex items-center text-sm font-bold bg-linear-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-xl hover:opacity-90 transition shadow-sm"
+          >
+            Sign Up
+          </Link>
+
+          {/* Cart */}
           <div className="relative w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center shadow-sm cursor-pointer hover:border-orange-400 transition">
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-linear-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
               0

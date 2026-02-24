@@ -20,7 +20,7 @@ const Categories = [
     },
     {
         id:3,
-        name:"soup",
+        name:"soups",
         icon:<TbBowlFilled className='w-[60px] h-[60px] text-green-600' />
     },
     {

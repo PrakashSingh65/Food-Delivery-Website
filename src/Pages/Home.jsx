@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Categories from '../Category'
 import Card from '../Components/Card'
 import Hero from '../Components/Hero'
@@ -6,16 +6,17 @@ import StatsBar from '../Components/StatsBar'
 import WhyUs from '../Components/WhyUs'
 import Footer from '../Components/Footer'
 import { food_items } from '../Food'
-import { dataContext } from '../Context/UserContext'
+import { IoSearch } from 'react-icons/io5'
 
 const Home = () => {
   const [cate, setCate] = useState(food_items)
   const [activeCategory, setActiveCategory] = useState('All')
-  const { input } = useContext(dataContext)
+  const [searchText, setSearchText] = useState('')
   const menuRef = useRef(null)
 
   function filter(category) {
     setActiveCategory(category)
+    setSearchText('') // clear search when changing category
     const categoryLower = category.toLowerCase()
     if (categoryLower === 'all') {
       setCate(food_items)
@@ -28,10 +29,10 @@ const Home = () => {
     menuRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // Filter by search input
-  const displayedItems = input.trim()
+  // Filter by local search text only
+  const displayedItems = searchText.trim()
     ? cate.filter(item =>
-        item.food_name.toLowerCase().includes(input.toLowerCase())
+        item.food_name.toLowerCase().includes(searchText.toLowerCase())
       )
     : cate
 
@@ -79,13 +80,40 @@ const Home = () => {
           ))}
         </div>
 
+        {/* Local search bar */}
+        <div className="flex justify-center mb-8">
+          <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-2xl px-5 py-3 w-full max-w-md shadow-sm focus-within:border-orange-400 transition">
+            <IoSearch className="text-orange-400 text-xl shrink-0" />
+            <input
+              type="text"
+              placeholder="Search in menu…"
+              className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400"
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+            />
+            {searchText && (
+              <button
+                onClick={() => setSearchText('')}
+                className="text-gray-400 hover:text-red-500 font-bold text-lg leading-none transition"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Results heading */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-gray-500 text-sm">
             Showing <span className="font-bold text-gray-800">{displayedItems.length}</span> items
-            {input ? ` for "${input}"` : ` in `}
-            {!input && <span className="font-bold text-orange-500"> {activeCategory.replace('_', ' ')}</span>}
+            {searchText ? ` for "${searchText}"` : ' in '}
+            {!searchText && <span className="font-bold text-orange-500"> {activeCategory.replace('_', ' ')}</span>}
           </p>
+          {searchText && (
+            <button onClick={() => setSearchText('')} className="text-xs text-orange-500 hover:underline font-semibold">
+              Clear search
+            </button>
+          )}
         </div>
 
         {/* Food Grid */}
