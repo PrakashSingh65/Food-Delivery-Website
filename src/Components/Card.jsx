@@ -4,12 +4,14 @@ import { GiChickenOven } from 'react-icons/gi'
 import { FiShoppingCart } from 'react-icons/fi'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../redux/cartSlice'
+import { toast } from 'react-toastify';
 
 const Card = ({ name, image, id, price, type }) => {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
     dispatch(addToCart({ name, image, id, price, type }));
+    toast.success(`${name} added to cart!`);
   };
 
   return (

@@ -4,10 +4,16 @@ import { Link } from 'react-router-dom'
 import { removeFromCart, increaseQty, decreaseQty } from '../redux/cartSlice'
 import { FiTrash2, FiPlus, FiMinus, FiArrowLeft } from 'react-icons/fi'
 import { MdOutlineShoppingCartCheckout } from 'react-icons/md'
+import { toast } from 'react-toastify'
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items)
   const dispatch = useDispatch()
+
+  const handleRemove = (id, name) => {
+    dispatch(removeFromCart(id));
+    toast.error(`${name} removed from cart`);
+  };
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
@@ -73,7 +79,7 @@ const Cart = () => {
                 </div>
                 
                 <button 
-                  onClick={() => dispatch(removeFromCart(item.id))}
+                  onClick={() => handleRemove(item.id, item.name)}
                   className="flex items-center gap-2 text-red-500 text-sm font-bold hover:text-red-600 transition"
                 >
                   <FiTrash2 /> Remove item
