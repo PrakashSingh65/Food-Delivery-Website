@@ -1,27 +1,47 @@
 import React from 'react'
-import image1 from "../assets/image1.avif"
-import { LuLeafyGreen } from "react-icons/lu";
-import { GiChickenOven } from "react-icons/gi";
+import { LuLeafyGreen } from 'react-icons/lu'
+import { GiChickenOven } from 'react-icons/gi'
+import { FiShoppingCart } from 'react-icons/fi'
 
-const Card = ({name,image,id,price,type}) => {
-    
+const Card = ({ name, image, id, price, type }) => {
   return (
-    <div className='w-[300px] h-[400px] bg-white p-3 rounded-lg
-    flex flex-col gap-3 shadow-lg hover:border-2 border-red-700'>
-        <div className='w-[100%] h-[60%] overflow-hidden rounded-lg'>
-          <img src={image} alt="Food item" className='w-full h-full object-cover' />
+    <div className="group w-[280px] bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 flex flex-col border border-gray-100">
+
+      {/* Image */}
+      <div className="relative w-full h-[180px] overflow-hidden">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        {/* Veg / Non-veg badge */}
+        <span
+          className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 shadow ${
+            type === 'veg'
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+          }`}
+        >
+          {type === 'veg' ? (
+            <><LuLeafyGreen /> Veg</>
+          ) : (
+            <><GiChickenOven /> Non-Veg</>
+          )}
+        </span>
+      </div>
+
+      {/* Details */}
+      <div className="p-5 flex flex-col gap-3 flex-1">
+        <h3 className="text-lg font-bold text-gray-800 leading-tight">{name}</h3>
+
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-xl font-black text-orange-500">₹{price}</span>
+          <button className="flex items-center gap-2 bg-linear-to-r from-orange-500 to-red-500 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-md">
+            <FiShoppingCart />
+            Add
+          </button>
         </div>
-        <div className='p-4'>
-          <h3 className='text-2xl font-semibold text-gray-800'>{name}</h3>
-          <p className='text-sm text-gray-600 mt-1'>Food description goes here</p>
-        </div>
-        <div className='w-full flex justify-between items-center'>
-          <span className='text-lg font-bold text-green-600'>Rs {price}</span>
-          <div className='flex justify-center items-center gap-2 text-green-500 text-lg font-semibold'>
-            {type==="veg"?<LuLeafyGreen />:<GiChickenOven />}<span>{type}</span></div>
-        </div>
-        <button className='w-full p-3 rounded-lg bg-red-700 text-white 
-        hover:bg-green-400 transition-all'>Add to dish</button>
+      </div>
     </div>
   )
 }

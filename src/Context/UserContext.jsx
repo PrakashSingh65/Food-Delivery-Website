@@ -1,22 +1,20 @@
- import React from 'react'
- import { createContext } from 'react'
- export const dataContext=createContext()
- 
- const UserContext = ({ children }) => {
-  let[input,setInput]=useState("") 
-  let data={
-    input,
-    setInput
-  }
+import React, { createContext, useState } from 'react'
 
-   return (
-     <div>
-      <dataContext.Provider value={data}>
-        {children}
-      </dataContext.Provider>
-         
-     </div>
-   )
- }
- 
- export default UserContext
+export const dataContext = createContext()
+
+const UserContext = ({ children }) => {
+  const [input, setInput] = useState("")
+
+  // const data = {
+  //   input,
+  //   setInput,
+  // }
+
+  return (
+    <dataContext.Provider value={{ input, setInput }}>
+      {children}
+    </dataContext.Provider>
+  )
+}
+
+export default UserContext
