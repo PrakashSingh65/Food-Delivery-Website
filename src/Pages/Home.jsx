@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import Categories from '../Category'
 import Card from '../Components/Card'
 import Hero from '../Components/Hero'
@@ -6,7 +7,8 @@ import StatsBar from '../Components/StatsBar'
 import WhyUs from '../Components/WhyUs'
 import Footer from '../Components/Footer'
 import { food_items } from '../Food'
-import { IoSearch } from 'react-icons/io5'
+import { useGetRestaurantsQuery } from '../redux/api/restaurantApi'
+import { FiStar, FiClock, FiMapPin, FiArrowRight } from 'react-icons/fi'
 
 const Home = () => {
   const [cate, setCate] = useState(food_items)
@@ -14,14 +16,18 @@ const Home = () => {
   const [searchText, setSearchText] = useState('')
   const menuRef = useRef(null)
 
+  // Fetch real restaurants from Node.js backend
+  const { data: restaurantResponse, isLoading: isRestLoading } = useGetRestaurantsQuery()
+  const restaurants = restaurantResponse?.data?.restaurants || []
+
   function filter(category) {
     setActiveCategory(category)
-    setSearchText('') // clear search when changing category
+    setSearchText('')
     const categoryLower = category.toLowerCase()
     if (categoryLower === 'all') {
       setCate(food_items)
     } else {
-      setCate(food_items.filter(item => item.food_category === categoryLower))
+      setCate(food_items.filter((item) => item.food_category === categoryLower))
     }
   }
 
@@ -29,28 +35,101 @@ const Home = () => {
     menuRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // Filter by local search text only
   const displayedItems = searchText.trim()
-    ? cate.filter(item =>
+    ? cate.filter((item) =>
         item.food_name.toLowerCase().includes(searchText.toLowerCase())
       )
     : cate
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       {/* Hero */}
       <Hero onExplore={scrollToMenu} />
 
       {/* Stats Bar */}
       <StatsBar />
 
-      {/* Menu Section */}
-      <section ref={menuRef} className="max-w-7xl mx-auto px-6 md:px-12 py-20">
+      {/* Featured Restaurants from Real Backend */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-orange-500 bg-orange-50 px-3 py-1 rounded-full">
+              Live Backend Synchronized
+            </span>
+            <h2 className="text-3xl font-black text-gray-900 mt-2">
+              Popular Restaurants Near You 🛵
+            </h2>
+            <p className="text-gray-400 text-sm mt-1">
+              Handpicked dining partners ready to prepare and deliver hot meals
+            </p>
+          </div>
+        </div>
 
-        {/* Section heading */}
+        {isRestLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="bg-white rounded-3xl h-72 animate-pulse border border-gray-100" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {restaurants.map((rest) => (
+              <Link
+                key={rest._id}
+                to={`/restaurant/${rest._id}`}
+                className="group bg-white rounded-3xl overflow-hidden shadow-xs hover:shadow-xl border border-gray-100 transition-all duration-300 flex flex-col"
+              >
+                <div className="h-48 w-full relative overflow-hidden bg-gray-100">
+                  <img
+                    src={rest.imageUrl}
+                    alt={rest.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-xl text-xs font-bold text-gray-900 flex items-center gap-1 shadow-xs">
+                    <FiStar className="text-yellow-400 fill-yellow-400" />
+                    {rest.rating}
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-xl text-xs font-semibold flex items-center gap-1">
+                    <FiClock size={12} className="text-orange-400" />
+                    {rest.deliveryTimeMin} mins
+                  </div>
+                </div>
+
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xl font-black text-gray-900 group-hover:text-orange-500 transition">
+                      {rest.name}
+                    </h3>
+                    <p className="text-xs text-orange-600 font-bold mt-1">
+                      {rest.cuisineTypes.join(', ')}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-2 line-clamp-2">
+                      {rest.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <FiMapPin className="text-orange-500" />
+                      {rest.address.city}
+                    </span>
+                    <span className="font-bold text-orange-500 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      View Menu <FiArrowRight />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Menu Section */}
+      <section ref={menuRef} className="max-w-7xl mx-auto px-6 md:px-12 py-16">
         <div className="text-center mb-12">
-          <span className="text-sm font-semibold uppercase tracking-widest text-orange-500">Our Menu</span>
+          <span className="text-sm font-semibold uppercase tracking-widest text-orange-500">
+            Our Dishes
+          </span>
           <h2 className="text-4xl md:text-5xl font-black text-gray-900 mt-2">
             What's on Your Mind? 🤔
           </h2>
@@ -59,90 +138,37 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Category filter */}
+        {/* Category Pills */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {Categories.map(item => (
+          {Categories.map((item) => (
             <button
               key={item.id}
-              onClick={() => {
-                filter(item.name)
-                scrollToMenu()
-              }}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 border-2 ${
+              onClick={() => filter(item.name)}
+              className={`flex items-center gap-2.5 px-5 py-2.5 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer ${
                 activeCategory === item.name
-                  ? 'bg-linear-to-r from-orange-500 to-red-500 text-white border-transparent shadow-lg scale-105'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-orange-300 hover:text-orange-500'
+                  ? 'bg-linear-to-r from-orange-500 to-red-500 text-white shadow-md shadow-orange-500/30 scale-105'
+                  : 'bg-white text-gray-600 hover:text-orange-500 hover:shadow-xs border border-gray-100'
               }`}
             >
-              <span className="text-xl">{item.icon}</span>
-              <span className="capitalize">{item.name.replace('_', ' ')}</span>
+              <span className="text-lg">{item.icon}</span>
+              <span>{item.name}</span>
             </button>
           ))}
         </div>
 
-        {/* Local search bar */}
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-2xl px-5 py-3 w-full max-w-md shadow-sm focus-within:border-orange-400 transition">
-            <IoSearch className="text-orange-400 text-xl shrink-0" />
-            <input
-              type="text"
-              placeholder="Search in menu…"
-              className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400"
-              value={searchText}
-              onChange={e => setSearchText(e.target.value)}
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {displayedItems.map((item) => (
+            <Card
+              key={item.id}
+              name={item.food_name}
+              image={item.food_image}
+              price={item.price}
+              id={item.id}
+              type={item.food_type}
             />
-            {searchText && (
-              <button
-                onClick={() => setSearchText('')}
-                className="text-gray-400 hover:text-red-500 font-bold text-lg leading-none transition"
-              >
-                ×
-              </button>
-            )}
-          </div>
+          ))}
         </div>
-
-        {/* Results heading */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-gray-500 text-sm">
-            Showing <span className="font-bold text-gray-800">{displayedItems.length}</span> items
-            {searchText ? ` for "${searchText}"` : ' in '}
-            {!searchText && <span className="font-bold text-orange-500"> {activeCategory.replace('_', ' ')}</span>}
-          </p>
-          {searchText && (
-            <button onClick={() => setSearchText('')} className="text-xs text-orange-500 hover:underline font-semibold">
-              Clear search
-            </button>
-          )}
-        </div>
-
-        {/* Food Grid */}
-        {displayedItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <span className="text-7xl">🍽️</span>
-            <h3 className="text-2xl font-bold text-gray-700">No dishes found</h3>
-            <p className="text-gray-400">Try a different category or search term.</p>
-            <button
-              onClick={() => filter('All')}
-              className="mt-2 bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-orange-600 transition"
-            >
-              Show All Items
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-wrap justify-center gap-6">
-            {displayedItems.map(item => (
-              <Card
-                key={item.id}
-                name={item.food_name}
-                image={item.food_image}
-                price={item.price}
-                id={item.id}
-                type={item.food_type}
-              />
-            ))}
-          </div>
-        )}
       </section>
 
       {/* Why Us */}

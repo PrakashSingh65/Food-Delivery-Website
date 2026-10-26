@@ -2,45 +2,60 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { MdFastfood } from 'react-icons/md'
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
-import { FcGoogle } from 'react-icons/fc'
+import { useLoginMutation } from '../redux/api/authApi'
+import { toast } from 'react-toastify'
+
+const DEMO_ACCOUNTS = [
+  { role: 'Customer', email: 'customer@foodrush.com', pass: 'password123' },
+  { role: 'Restaurant Owner', email: 'restaurant@foodrush.com', pass: 'password123' },
+  { role: 'Delivery Partner', email: 'delivery@foodrush.com', pass: 'password123' },
+  { role: 'Admin', email: 'admin@foodrush.com', pass: 'password123' },
+]
 
 const Login = () => {
   const navigate = useNavigate()
+  const [loginUser, { isLoading }] = useLoginMutation()
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPass, setShowPass] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
     setError('')
   }
 
-  const handleSubmit = e => {
+  const fillDemo = (email, pass) => {
+    setForm({ email, password: pass })
+    setError('')
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.email || !form.password) {
-      setError('Please fill in all fields.')
+      setError('Please fill in both email and password.')
       return
     }
-    setLoading(true)
-    // Simulate login
-    setTimeout(() => {
-      setLoading(false)
-      navigate('/')
-    }, 1200)
+
+    try {
+      const res = await loginUser(form).unwrap()
+      if (res.success) {
+        toast.success(`Welcome back, ${res.data.user.name}! (${res.data.user.role})`)
+        navigate('/')
+      }
+    } catch (err) {
+      const msg = err?.data?.message || err?.message || 'Login failed. Please check credentials.'
+      setError(msg)
+      toast.error(msg)
+    }
   }
 
   return (
     <div className="min-h-screen flex">
-
       {/* Left panel – branding */}
       <div className="hidden lg:flex flex-col justify-between w-1/2 bg-linear-to-br from-orange-500 via-red-500 to-pink-600 p-12 text-white relative overflow-hidden">
-        {/* Decorative circles */}
         <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-white/10" />
         <div className="absolute bottom-10 right-[-60px] w-60 h-60 rounded-full bg-white/10" />
-        <div className="absolute top-1/2 left-1/4 w-40 h-40 rounded-full bg-white/5" />
 
-        {/* Logo */}
         <div className="flex items-center gap-3 z-10">
           <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
             <MdFastfood className="text-white text-xl" />
@@ -48,127 +63,118 @@ const Login = () => {
           <span className="text-2xl font-black">FoodRush</span>
         </div>
 
-        {/* Center copy */}
-        <div className="z-10">
-          <h2 className="text-5xl font-black leading-tight mb-4">
-            Good food is<br />just a click away 🍕
-          </h2>
-          <p className="text-white/80 text-lg leading-relaxed">
-            Log in to your account to order from hundreds of restaurants and get your favourite meals delivered hot and fresh.
+        <div className="z-10 space-y-4 max-w-md">
+          <h1 className="text-4xl font-black leading-tight">
+            Delicious food, delivered fast to your doorstep.
+          </h1>
+          <p className="text-white/80 text-sm leading-relaxed">
+            Order from the top restaurants in town and track your delivery live with real-time GPS coordinates.
           </p>
         </div>
 
-        {/* Bottom testimonial */}
-        <div className="bg-white/15 backdrop-blur rounded-2xl p-5 z-10">
-          <p className="text-sm font-medium text-white/90">
-            "FoodRush delivers the best food in town in the fastest time. Absolutely love it!"
-          </p>
-          <div className="flex items-center gap-3 mt-3">
-            <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center text-sm font-bold">R</div>
-            <div>
-              <p className="text-sm font-semibold">Rahul Sharma</p>
-              <p className="text-xs text-white/60">Regular customer ⭐⭐⭐⭐⭐</p>
-            </div>
-          </div>
+        <div className="z-10 text-xs text-white/60">
+          © {new Date().getFullYear()} FoodRush Platform. All rights reserved.
         </div>
       </div>
 
-      {/* Right panel – form */}
-      <div className="flex-1 flex items-center justify-center bg-gray-50 px-6 py-12">
-        <div className="w-full max-w-md">
-
-          {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-9 h-9 bg-linear-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-              <MdFastfood className="text-white" />
-            </div>
-            <span className="text-xl font-black text-gray-800">Food<span className="text-orange-500">Rush</span></span>
+      {/* Right panel – login form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md space-y-6">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-orange-500 bg-orange-50 px-3 py-1 rounded-full">
+              Full-Stack Connected
+            </span>
+            <h2 className="text-3xl font-black text-gray-900 mt-2">Sign In to FoodRush</h2>
+            <p className="text-gray-400 text-sm mt-1">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-orange-500 font-bold hover:underline">
+                Create one now
+              </Link>
+            </p>
           </div>
 
-          <h1 className="text-3xl font-black text-gray-900 mb-1">Welcome back 👋</h1>
-          <p className="text-gray-400 text-sm mb-8">Sign in to your FoodRush account</p>
+          {/* Quick Demo Credentials */}
+          <div className="bg-orange-50/70 border border-orange-100 rounded-2xl p-4">
+            <p className="text-xs font-bold text-orange-800 mb-2">⚡ Quick 1-Click Demo Accounts:</p>
+            <div className="grid grid-cols-2 gap-2">
+              {DEMO_ACCOUNTS.map((acc) => (
+                <button
+                  key={acc.role}
+                  type="button"
+                  onClick={() => fillDemo(acc.email, acc.pass)}
+                  className="text-left text-xs bg-white hover:bg-orange-100/50 border border-orange-200 text-gray-800 px-2.5 py-1.5 rounded-lg transition font-medium"
+                >
+                  <span className="font-bold text-orange-600 block">{acc.role}</span>
+                  {acc.email.split('@')[0]}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          {/* Error banner */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-5">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-            {/* Email */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-sm font-semibold text-gray-700 block mb-1.5">Email address</label>
-              <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-2xl px-4 py-3 focus-within:border-orange-400 transition">
-                <FiMail className="text-gray-400 text-lg shrink-0" />
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1.5">
+                Email Address
+              </label>
+              <div className="relative">
+                <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="email"
                   name="email"
-                  placeholder="you@example.com"
                   value={form.email}
                   onChange={handleChange}
-                  className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent"
+                  placeholder="name@example.com"
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:border-orange-500 focus:outline-none transition"
                 />
               </div>
             </div>
 
-            {/* Password */}
             <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="text-sm font-semibold text-gray-700">Password</label>
-                <a href="#" className="text-xs text-orange-500 hover:underline font-medium">Forgot password?</a>
-              </div>
-              <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-2xl px-4 py-3 focus-within:border-orange-400 transition">
-                <FiLock className="text-gray-400 text-lg shrink-0" />
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type={showPass ? 'text' : 'password'}
                   name="password"
-                  placeholder="Enter your password"
                   value={form.password}
                   onChange={handleChange}
-                  className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent"
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:border-orange-500 focus:outline-none transition"
                 />
-                <button type="button" onClick={() => setShowPass(p => !p)} className="text-gray-400 hover:text-gray-600 transition">
-                  {showPass ? <FiEyeOff /> : <FiEye />}
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPass ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                 </button>
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-linear-to-r from-orange-500 to-red-500 text-white font-bold py-4 rounded-2xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-orange-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              disabled={isLoading}
+              className="w-full bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition disabled:opacity-50 cursor-pointer"
             >
-              {loading ? (
-                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : 'Sign In'}
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3 my-1">
-              <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-xs text-gray-400 font-medium">OR</span>
-              <div className="flex-1 h-px bg-gray-200" />
-            </div>
-
-            {/* Google */}
-            <button
-              type="button"
-              className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 bg-white py-3.5 rounded-2xl hover:border-gray-300 hover:bg-gray-50 transition font-semibold text-gray-700 text-sm"
-            >
-              <FcGoogle className="text-xl" />
-              Continue with Google
+              {isLoading ? 'Authenticating with Backend...' : 'Sign In'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-400 mt-8">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-orange-500 font-bold hover:underline">
-              Sign up free
+          <div className="text-center">
+            <Link to="/" className="text-xs text-gray-500 hover:text-orange-500 font-medium">
+              ← Back to Home
             </Link>
-          </p>
+          </div>
         </div>
       </div>
     </div>
