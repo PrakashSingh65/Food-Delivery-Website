@@ -51,8 +51,8 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold mb-4">Contact Us</h4>
             <div className="flex flex-col gap-2 text-sm text-gray-400">
-              <p>📍 123 Food Street, Mumbai, India</p>
-              <p>📞 +91 98765 43210</p>
+              <p>📍 e 2/49 KDA COLONY DAHELI SUJANPUR, KANPUR, India</p>
+              <p>📞 +91 9236894256</p>
               <p>✉️ hello@foodrush.com</p>
               <div className="mt-4 flex items-center gap-2 text-green-400 font-semibold">
                 <MdDeliveryDining size={20} />
@@ -63,7 +63,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 pt-6 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} FoodRush. All rights reserved. Made with ❤️ for food lovers.
+          © {new Date().getFullYear()} FoodRush. All rights reserved. Made By Prakash Singh.
         </div>
       </div>
     </footer>
